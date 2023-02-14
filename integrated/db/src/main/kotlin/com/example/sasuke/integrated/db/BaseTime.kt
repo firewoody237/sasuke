@@ -1,8 +1,8 @@
-package com.example.sasuke.integrated.common
+package com.example.sasuke.integrated.db
 
-import jakarta.persistence.Column
-import jakarta.persistence.EntityListeners
-import jakarta.persistence.MappedSuperclass
+import javax.persistence.Column
+import javax.persistence.EntityListeners
+import javax.persistence.MappedSuperclass
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

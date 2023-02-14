@@ -2,9 +2,9 @@ package com.example.sasuke.integrated.webservice.api
 
 import com.example.sasuke.integrated.common.ResultCode
 import com.example.sasuke.integrated.common.ResultCodeException
-import jakarta.servlet.ServletException
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
+import javax.servlet.ServletException
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.springframework.boot.json.JsonParseException

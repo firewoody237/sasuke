@@ -1,8 +1,8 @@
 package com.example.sasuke.integrated.db.entity
 
-import com.example.sasuke.integrated.common.BaseTime
+import com.example.sasuke.integrated.db.BaseTime
 import com.example.sasuke.integrated.common.Category
-import jakarta.persistence.*
+import javax.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
