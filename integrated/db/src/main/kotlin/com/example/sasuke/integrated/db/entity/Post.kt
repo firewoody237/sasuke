@@ -21,7 +21,7 @@ data class Post(
     var category: Category = Category.UNCATEGORIZED,
 
     @Column(nullable = false)
-    val authorName: String = "",
+    val authorId: Long = 0L,
 
     @Column
     var deletedAt: LocalDateTime? = null,
@@ -71,6 +71,6 @@ data class Post(
     }
 
     override fun toString(): String {
-        return "Post(id=$id, title='$title', content='$content', category='$category', userId='$authorName', deletedAt='$deletedAt')"
+        return "Post(id=$id, title='$title', content='$content', category='$category', authorId='$authorId', deletedAt='$deletedAt')"
     }
 }
