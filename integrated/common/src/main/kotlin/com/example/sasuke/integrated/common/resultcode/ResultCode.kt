@@ -1,4 +1,4 @@
-package com.example.sasuke.integrated.common
+package com.example.sasuke.integrated.common.resultcode
 
 enum class ResultCode(val code: Int, val msg: String) {
 

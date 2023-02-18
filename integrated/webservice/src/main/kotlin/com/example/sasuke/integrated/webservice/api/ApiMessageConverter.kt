@@ -1,6 +1,6 @@
 package com.example.sasuke.integrated.webservice.api
 
-import com.example.sasuke.integrated.common.ResultCode
+import com.example.sasuke.integrated.common.resultcode.ResultCode
 import org.springframework.http.HttpInputMessage
 import org.springframework.http.HttpOutputMessage
 import org.springframework.http.HttpStatus

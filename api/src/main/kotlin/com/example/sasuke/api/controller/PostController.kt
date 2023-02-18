@@ -1,9 +1,9 @@
 package com.example.sasuke.api.controller
 
-import com.example.sasuke.integrated.common.dto.CreatePostDTO
-import com.example.sasuke.integrated.common.dto.DeletePostDTO
-import com.example.sasuke.integrated.common.dto.GetPostDTO
-import com.example.sasuke.integrated.common.dto.UpdatePostDTO
+import com.example.sasuke.integrated.db.dto.CreatePostDTO
+import com.example.sasuke.integrated.db.dto.DeletePostDTO
+import com.example.sasuke.integrated.db.dto.GetPostDTO
+import com.example.sasuke.integrated.db.dto.UpdatePostDTO
 import com.example.sasuke.integrated.db.service.PostService
 import com.example.sasuke.integrated.webservice.api.ApiRequestMapping
 import org.apache.logging.log4j.LogManager

@@ -1,6 +1,6 @@
 package com.example.sasuke.integrated.webservice.api
 
-import com.example.sasuke.integrated.common.ResultCode
+import com.example.sasuke.integrated.common.resultcode.ResultCode
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.apache.commons.lang.StringUtils
 import org.apache.logging.log4j.ThreadContext

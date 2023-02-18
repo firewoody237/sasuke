@@ -1,4 +1,4 @@
-package com.example.sasuke.integrated.common.dto
+package com.example.sasuke.integrated.db.dto
 
 data class UpdatePostDTO(
     val id: Long?,

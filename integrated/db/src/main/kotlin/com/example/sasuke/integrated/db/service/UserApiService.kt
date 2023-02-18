@@ -1,9 +1,9 @@
 package com.example.sasuke.integrated.db.service
 
 
-import com.example.sasuke.integrated.common.ResultCode
-import com.example.sasuke.integrated.common.ResultCodeException
-import com.example.sasuke.integrated.common.user.Grade
+import com.example.sasuke.integrated.common.resultcode.ResultCode
+import com.example.sasuke.integrated.common.resultcode.ResultCodeException
+import com.example.sasuke.integrated.db.enum.Grade
 import com.example.sasuke.integrated.db.model.User
 import io.netty.channel.ChannelOption
 import io.netty.channel.ConnectTimeoutException

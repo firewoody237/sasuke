@@ -1,9 +1,9 @@
 package com.example.sasuke.integrated.db.service
 
-import com.example.sasuke.integrated.common.dto.CreatePostDTO
-import com.example.sasuke.integrated.common.dto.DeletePostDTO
-import com.example.sasuke.integrated.common.dto.GetPostDTO
-import com.example.sasuke.integrated.common.dto.UpdatePostDTO
+import com.example.sasuke.integrated.db.dto.CreatePostDTO
+import com.example.sasuke.integrated.db.dto.DeletePostDTO
+import com.example.sasuke.integrated.db.dto.GetPostDTO
+import com.example.sasuke.integrated.db.dto.UpdatePostDTO
 import com.example.sasuke.integrated.db.entity.Post
 import org.springframework.data.domain.PageRequest
 

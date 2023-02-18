@@ -1,4 +1,4 @@
-package com.example.sasuke.integrated.common.user
+package com.example.sasuke.integrated.db.enum
 
 enum class Authority(val description: String) {
     NORMAL("일반 사용자"),

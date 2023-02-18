@@ -1,4 +1,4 @@
-package com.example.sasuke.integrated.db
+package com.example.sasuke.integrated.db.entity
 
 import javax.persistence.Column
 import javax.persistence.EntityListeners
