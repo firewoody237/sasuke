@@ -84,97 +84,124 @@ class PostService(
         }*/
     }
 
-    fun getPost(id: Long): Post {
-        log.debug("getPost, id = '$id'")
+    fun getPostById(id: Long): Post {
+        log.debug("call getPostById : id = '$id'")
+
+        if (id == 0L) {
+            throw ResultCodeException(
+                resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
+                loglevel = Level.WARN,
+                message = "파라미터에 [id]이 존재하지 않습니다."
+            )
+        }
 
         val postOptional = try {
             postRepository.findById(id)
         } catch (e: Exception) {
-            log.error("getPost DB search failed. $id", e)
-            throw ResultCodeException(ResultCode.ERROR_DB, loglevel = Level.ERROR)
+            log.error("getPostById DB search failed. $id", e)
+            throw ResultCodeException(
+                resultCode = ResultCode.ERROR_DB,
+                loglevel = Level.ERROR,
+                message = "getPostById 호출 중 DB오류 발생 : ${e.message}"
+            )
         }
 
-        if (postOptional.isPresent && postOptional.get().deletedAt == null) {
-            return postOptional.get()
-        } else {
-            throw ResultCodeException(ResultCode.ERROR_POST_NOT_EXIST, loglevel = Level.INFO)
+        return when (postOptional.isPresent && postOptional.get().deletedAt == null) {
+            true -> postOptional.get()
+            else -> throw ResultCodeException(
+                resultCode = ResultCode.ERROR_POST_NOT_EXIST,
+                loglevel = Level.WARN,
+                message = "getPostById : id['$id'] 게시글이 존재하지 않습니다."
+            )
         }
     }
 
     fun createPost(createPostDTO: CreatePostDTO): Post {
-        log.debug("createPost, createPostDTO='$createPostDTO'")
+        log.debug("call createPost : createPostDTO = '$createPostDTO'")
 
-        if (createPostDTO.authorName.isNullOrEmpty()) {
+        if (createPostDTO.authorId == 0L) {
             throw ResultCodeException(
                 ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
-                message = "저자명이 없습니다."
+                message = "파라미터에 저자ID가 존재하지 않습니다."
             )
         }
 
-        val author = userApiService.getUserByName(createPostDTO.authorName!!)
-
-        when {
-            createPostDTO.title.isNullOrEmpty() -> {
-                throw ResultCodeException(
-                    ResultCode.ERROR_PARAMETER_NOT_EXISTS,
-                    loglevel = Level.WARN,
-                    message = "title이 없습니다."
-                )
-            }
-
-            createPostDTO.content.isNullOrEmpty() -> {
-                throw ResultCodeException(
-                    ResultCode.ERROR_PARAMETER_NOT_EXISTS,
-                    loglevel = Level.WARN,
-                    message = "content가 없습니다."
-                )
-            }
-
-            createPostDTO.category.isNullOrEmpty() -> {
-                throw ResultCodeException(
-                    ResultCode.ERROR_PARAMETER_NOT_EXISTS,
-                    loglevel = Level.WARN,
-                    message = "category가 없습니다."
-                )
-            }
+        if (createPostDTO.title.isNullOrEmpty()) {
+            throw ResultCodeException(
+                ResultCode.ERROR_PARAMETER_NOT_EXISTS,
+                loglevel = Level.WARN,
+                message = "파라미터에 제목이 존재하지 않습니다."
+            )
         }
 
-        val post = Post(
-            title = createPostDTO.title!!,
-            content = createPostDTO.content!!,
-            category = Category.valueOf(createPostDTO.category!!),
-            authorId = author.id!!
-        )
+        if (createPostDTO.content.isNullOrEmpty()) {
+            throw ResultCodeException(
+                ResultCode.ERROR_PARAMETER_NOT_EXISTS,
+                loglevel = Level.WARN,
+                message = "파라미터에 내용이 존재하지 않습니다."
+            )
+        }
+
+        if (createPostDTO.category.isNullOrEmpty()) {
+            throw ResultCodeException(
+                ResultCode.ERROR_PARAMETER_NOT_EXISTS,
+                loglevel = Level.WARN,
+                message = "파라미터에 카테고리가 존재하지 않습니다."
+            )
+        }
+
+        val author = userApiService.getUserById(createPostDTO.authorId)
 
         return try {
-            postRepository.save(post)
+            postRepository.save(
+                Post(
+                    title = createPostDTO.title!!,
+                    content = createPostDTO.content!!,
+                    category = Category.valueOf(createPostDTO.category!!),
+                    authorId = author.id,
+                )
+            )
         } catch (e: Exception) {
             throw ResultCodeException(
-                ResultCode.ERROR_DB,
-                loglevel = Level.WARN
+                resultCode = ResultCode.ERROR_DB,
+                loglevel = Level.WARN,
+                message = "createPost 호출 중 DB오류 발생 : ${e.message}"
             )
         }
     }
 
-    fun updatePost(updatePostDTO: UpdatePostDTO): Boolean {
-        log.debug("updatePost, updatePostDTO='$updatePostDTO'")
+    fun updatePost(updatePostDTO: UpdatePostDTO): Post {
+        log.debug("call updatePost : updatePostDTO = '$updatePostDTO'")
 
-        if (updatePostDTO.id == null || updatePostDTO.authorName.isNullOrEmpty()) {
+        if (updatePostDTO.id == 0L) {
             throw ResultCodeException(
-                ResultCode.ERROR_PARAMETER_NOT_EXISTS,
+                resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
+                message = "파라미터에 [ID]가 존재하지 않습니다."
+            )
+        }
+
+        if (updatePostDTO.authorId == 0L) {
+            throw ResultCodeException(
+                resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
+                loglevel = Level.WARN,
+                message = "파라미터에 저자ID가 존재하지 않습니다."
             )
         }
 
         //Post Check
-        val foundPost = getPost(updatePostDTO.id!!)
+        val foundPost = getPostById(updatePostDTO.id)
         //User Check
-        val foundUser = userApiService.getUserByName(updatePostDTO.authorName!!)
+        val foundUser = userApiService.getUserById(updatePostDTO.id)
 
         //Author Check
-        if (foundPost.authorId != foundUser.name) {
-            throw ResultCodeException(ResultCode.ERROR_REQUESTER_NOT_POST_AUTHOR, loglevel = Level.WARN)
+        if (foundPost.authorId != foundUser.id) {
+            throw ResultCodeException(
+                resultCode = ResultCode.ERROR_REQUESTER_NOT_POST_AUTHOR,
+                loglevel = Level.WARN,
+                message = "요청자와 저자가 동일하지 않습니다."
+            )
         }
 
         var isChange = false
@@ -198,43 +225,60 @@ class PostService(
 
         return try {
             when (isChange) {
-                true -> {
-                    postRepository.save(foundPost)
-                    true
-                }
-
-                else -> {
-                    false
-                }
+                true -> postRepository.save(foundPost)
+                else -> throw ResultCodeException(
+                    resultCode = ResultCode.ERROR_NOTHING_TO_MODIFY,
+                    loglevel = Level.INFO
+                )
             }
         } catch (e: Exception) {
-            throw ResultCodeException(ResultCode.ERROR_DB, loglevel = Level.ERROR)
+            throw ResultCodeException(
+                resultCode = ResultCode.ERROR_DB,
+                loglevel = Level.ERROR,
+                message = "updatePost 호출 중 DB오류 발생 : ${e.message}"
+            )
         }
     }
 
-    fun deletePost(deletePostDTO: DeletePostDTO): Boolean {
-        log.debug("deletePost deletePostDTO='$deletePostDTO'")
+    fun deletePost(deletePostDTO: DeletePostDTO) {
+        log.debug("call deletePost : deletePostDTO = '$deletePostDTO'")
 
-        if (deletePostDTO.id == null || deletePostDTO.authorName == null) {
+        if (deletePostDTO.id == 0L) {
             throw ResultCodeException(
-                ResultCode.ERROR_PARAMETER_NOT_EXISTS, loglevel = Level.WARN,
-                "게시글ID나 사용자ID를 모두 입력 해 주세요"
+                resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
+                loglevel = Level.WARN,
+                message = "파라미터에 [ID]가 존재하지 않습니다."
             )
         }
 
-        val foundUser = userApiService.getUserByName(deletePostDTO.authorName!!)
-        val foundPost = getPost(deletePostDTO.id!!)
-
-        if (foundPost.authorName != foundUser.name) {
-            throw ResultCodeException(ResultCode.ERROR_REQUESTER_NOT_POST_AUTHOR, loglevel = Level.WARN)
+        if (deletePostDTO.authorId == 0L) {
+            throw ResultCodeException(
+                resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
+                loglevel = Level.WARN,
+                message = "파라미터에 저자ID가 존재하지 않습니다."
+            )
         }
 
-        return try {
+        val foundUser = userApiService.getUserById(deletePostDTO.authorId)
+        val foundPost = getPostById(deletePostDTO.id)
+
+        if (foundPost.authorId != foundUser.id) {
+            throw ResultCodeException(
+                resultCode = ResultCode.ERROR_REQUESTER_NOT_POST_AUTHOR,
+                loglevel = Level.WARN,
+                message = "요청자와 저자가 동일하지 않습니다."
+            )
+        }
+
+        try {
             foundPost.deletedAt = LocalDateTime.now()
             postRepository.save(foundPost)
-            true
         } catch (e: Exception) {
-            throw ResultCodeException(ResultCode.ERROR_DB, loglevel = Level.ERROR)
+            throw ResultCodeException(
+                resultCode = ResultCode.ERROR_DB,
+                loglevel = Level.ERROR,
+                message = "deleteUpdate 호출 중 DB오류 발생 : ${e.message}"
+            )
         }
     }
 }

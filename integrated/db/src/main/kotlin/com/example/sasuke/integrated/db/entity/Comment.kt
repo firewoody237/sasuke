@@ -24,9 +24,8 @@ data class Comment(
     @Column
     val depth: Int? = 0,
 
-    @OneToOne
-    @JoinColumn(name = "comment_id")
-    val comment: Comment? = null,
+    @Column
+    val parentId: Long = 0L,
 
     @Column
     var deletedAt: LocalDateTime? = null,

@@ -2,15 +2,14 @@ package com.example.sasuke.api.controller
 
 import com.example.sasuke.integrated.db.dto.CreatePostDTO
 import com.example.sasuke.integrated.db.dto.DeletePostDTO
-import com.example.sasuke.integrated.db.dto.GetPostDTO
 import com.example.sasuke.integrated.db.dto.UpdatePostDTO
+import com.example.sasuke.integrated.db.service.PostService
 import com.example.sasuke.integrated.webservice.api.ApiRequestMapping
 import org.apache.logging.log4j.LogManager
-import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/post/v1")
+@RequestMapping("/v1")
 class PostController(
     private val postService: PostService,
 ) {
@@ -18,59 +17,73 @@ class PostController(
         private val log = LogManager.getLogger()
     }
 
-    @ApiRequestMapping("/posts", method = [RequestMethod.GET])
-    fun getPosts(
-        @RequestBody getPostDTO: GetPostDTO
-    ): List<PostVO> {
-        log.debug("getPosts, getPostDTO = '$getPostDTO'")
-        val pageRequest = PageRequest.of(getPostDTO.page, getPostDTO.size)
-        return postService.getPosts(getPostDTO, pageRequest).map { post ->
-            PostVO(
-                id = post.id,
-                authorId = post.authorName,
-                title = post.title,
-                content = post.content,
-            )
-        }
-    }
+//    @ApiRequestMapping("/posts", method = [RequestMethod.GET])
+//    fun getPosts(
+//        @RequestBody getPostDTO: GetPostDTO
+//    ): List<PostVO> {
+//        log.debug("getPosts, getPostDTO = '$getPostDTO'")
+//        val pageRequest = PageRequest.of(getPostDTO.page, getPostDTO.size)
+//        return postService.getPosts(getPostDTO, pageRequest).map { post ->
+//            PostVO(
+//                id = post.id,
+//                authorId = post.authorName,
+//                title = post.title,
+//                content = post.content,
+//            )
+//        }
+//    }
 
     @ApiRequestMapping("/posts/{id}", method = [RequestMethod.GET])
     fun getPosts(@PathVariable id: Long): Any? {
         log.debug("getPost, id = '$id'")
 
-        val post = postService.getPost(id)
+        val post = postService.getPostById(id)
+
         return PostVO(
             id = post.id,
-            authorId = post.authorName,
+            authorId = post.authorId,
             title = post.title,
             content = post.content,
-
-            )
+            category = post.category
+        )
     }
 
     @ApiRequestMapping("/posts", method = [RequestMethod.POST])
     fun createPost(@RequestBody createPostDTO: CreatePostDTO): Any? {
         log.debug("createPost. createPostDTO = '$createPostDTO'")
+
         val post = postService.createPost(createPostDTO)
+
         return PostVO(
             id = post.id,
-            authorId = post.authorName,
+            authorId = post.authorId,
             title = post.title,
             content = post.content,
+            category = post.category
         )
     }
 
     @ApiRequestMapping("/posts", method = [RequestMethod.PATCH, RequestMethod.PUT])
-    fun updatePost(@RequestBody updatePostDTO: UpdatePostDTO): Boolean {
+    fun updatePost(@RequestBody updatePostDTO: UpdatePostDTO): PostVO {
         log.debug("updatePost. updatePostDTO : $updatePostDTO")
-        return postService.updatePost(updatePostDTO)
+
+        val post = postService.updatePost(updatePostDTO)
+
+        return PostVO(
+            id = post.id,
+            authorId = post.authorId,
+            title = post.title,
+            content = post.content,
+            category = post.category
+        )
     }
 
 
     @ApiRequestMapping("/posts", method = [RequestMethod.DELETE])
-    fun deletePost(@RequestBody deletePostDTO: DeletePostDTO): Boolean? {
+    fun deletePost(@RequestBody deletePostDTO: DeletePostDTO) {
         log.debug("deletePostDTO. deletePost = '$deletePostDTO'")
-        return postService.deletePost(deletePostDTO)
+
+        postService.deletePost(deletePostDTO)
     }
 
     /* //TODO: 이 설계가 맞을까..?
