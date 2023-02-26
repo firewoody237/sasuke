@@ -1,6 +1,6 @@
-package com.example.sasuke.integrated.common.dto
+package com.example.sasuke.integrated.db.dto
 
-import com.example.sasuke.integrated.common.Category
+import com.example.sasuke.integrated.db.enum.Category
 import com.example.sasuke.integrated.common.constant.PAGE
 import com.example.sasuke.integrated.common.constant.SIZE
 

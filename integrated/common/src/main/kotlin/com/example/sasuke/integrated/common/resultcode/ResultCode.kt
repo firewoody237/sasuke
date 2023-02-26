@@ -1,4 +1,4 @@
-package com.example.sasuke.integrated.common
+package com.example.sasuke.integrated.common.resultcode
 
 enum class ResultCode(val code: Int, val msg: String) {
 
@@ -32,6 +32,15 @@ enum class ResultCode(val code: Int, val msg: String) {
     ERROR_POST_TITLE_WITH_USER_ALREADY_EXISTS(3001, "이미 같은 제목으로된 게시글이 존재합니다."),
     ERROR_REQUESTER_NOT_POST_AUTHOR(3002, "게시글의 저자가 아닙니다."),
     ERROR_POST_ALREADY_EXISTS(3003, "이미 존재하는 게시글 입니다."),
+
+    //3100 : Heart 관련
+    ERROR_HEART_ALREADY_EXIST(3101, "이미 HEART 내역이 존재합니다."),
+    ERROR_HEART_NOT_EXIST(3102, "HEART 내역이 존재하지 않습니다."),
+
+    //3200 : Comment 관련
+    ERROR_COMMENT_NOT_EXIST(3201, "COMMENT가 존재하지 않습니다."),
+    ERROR_COMMENT_AUTHOR_NOT_MATCHED_WITH_USER(3202, "저자와 요청자가 일치하지 않습니다."),
+    ERROR_COMMENT_NOT_MATCHED_WITH_POST(3203, "POST가 일치하지 않습니다."),
 
 
     //9000 : 확인이 힘든 오류

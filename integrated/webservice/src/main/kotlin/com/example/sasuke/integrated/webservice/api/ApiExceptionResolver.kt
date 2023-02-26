@@ -1,7 +1,7 @@
 package com.example.sasuke.integrated.webservice.api
 
-import com.example.sasuke.integrated.common.ResultCode
-import com.example.sasuke.integrated.common.ResultCodeException
+import com.example.sasuke.integrated.common.resultcode.ResultCode
+import com.example.sasuke.integrated.common.resultcode.ResultCodeException
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse

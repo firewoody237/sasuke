@@ -1,7 +1,7 @@
 package com.example.sasuke.integrated.db.model
 
-import com.example.sasuke.integrated.common.user.Authority
-import com.example.sasuke.integrated.common.user.Grade
+import com.example.sasuke.integrated.db.enum.Authority
+import com.example.sasuke.integrated.db.enum.Grade
 
 data class User(
     val id: Long = 0L,

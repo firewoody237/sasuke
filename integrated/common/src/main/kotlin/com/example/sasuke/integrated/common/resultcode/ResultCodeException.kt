@@ -1,4 +1,4 @@
-package com.example.sasuke.integrated.common
+package com.example.sasuke.integrated.common.resultcode
 
 import org.apache.commons.lang.StringUtils
 import org.apache.logging.log4j.Level

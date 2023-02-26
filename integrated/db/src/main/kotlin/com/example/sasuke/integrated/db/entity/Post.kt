@@ -1,7 +1,6 @@
 package com.example.sasuke.integrated.db.entity
 
-import com.example.sasuke.integrated.db.BaseTime
-import com.example.sasuke.integrated.common.Category
+import com.example.sasuke.integrated.db.enum.Category
 import javax.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
@@ -22,7 +21,7 @@ data class Post(
     var category: Category = Category.UNCATEGORIZED,
 
     @Column(nullable = false)
-    val authorName: String = "",
+    val authorId: Long = 0L,
 
     @Column
     var deletedAt: LocalDateTime? = null,
@@ -72,6 +71,6 @@ data class Post(
     }
 
     override fun toString(): String {
-        return "Post(id=$id, title='$title', content='$content', category='$category', userId='$authorName', deletedAt='$deletedAt')"
+        return "Post(id=$id, title='$title', content='$content', category='$category', authorId='$authorId', deletedAt='$deletedAt')"
     }
 }

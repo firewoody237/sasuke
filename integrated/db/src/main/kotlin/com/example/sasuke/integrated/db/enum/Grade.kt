@@ -1,4 +1,4 @@
-package com.example.sasuke.integrated.common.user
+package com.example.sasuke.integrated.db.enum
 
 enum class Grade(val description: String, val paid: Long) {
     GREEN("그린 등급", 0),

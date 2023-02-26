@@ -1,10 +1,10 @@
-package com.example.sasuke.integrated.common.dto
+package com.example.sasuke.integrated.db.dto
 
 
-import com.example.sasuke.integrated.common.Category
+import com.example.sasuke.integrated.db.enum.Category
 
 data class CreatePostDTO(
-    var authorName: String?,
+    var authorId: Long?,
     var title: String?,
     var content: String?,
     var category: String? = Category.UNCATEGORIZED.toString()

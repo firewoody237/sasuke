@@ -1,8 +1,8 @@
-package com.example.sasuke.integrated.common.dto
+package com.example.sasuke.integrated.db.dto
 
 data class UpdatePostDTO(
     val id: Long?,
-    val authorName: String?,
+    val authorId: Long?,
     var title: String?,
     var content: String?,
     var category: String?
