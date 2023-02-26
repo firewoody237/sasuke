@@ -23,10 +23,10 @@ class CommentService(
         private val log = LogManager.getLogger()
     }
 
-    fun getComment(id: Long): Comment {
+    fun getComment(id: Long?): Comment {
         log.debug("call getComment : id = '$id'")
 
-        if (id == 0L) {
+        if (id == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -35,7 +35,7 @@ class CommentService(
         }
 
         val optionalComment = try {
-            commentRepository.findById(id)
+            commentRepository.findByIdAndDeletedAtIsNull(id)
         } catch (e: Exception) {
             log.error("getComment DB search failed. $id", e)
             throw ResultCodeException(
@@ -59,7 +59,7 @@ class CommentService(
     fun getPostComments(getCommentsDTO: GetCommentsDTO): MutableList<Comment> {
         log.debug("call getPostComments : getCommentsDTO = '$getCommentsDTO'")
 
-        if (getCommentsDTO.postId == 0L) {
+        if (getCommentsDTO.postId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -69,7 +69,7 @@ class CommentService(
 
         return try {
             val foundPost = postService.getPostById(getCommentsDTO.postId)
-            commentRepository.findAllByPostAndDeletedAtIsNotNull(foundPost)
+            commentRepository.findAllByPostAndDeletedAtIsNull(foundPost)
         } catch(e:Exception) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_DB,
@@ -90,7 +90,7 @@ class CommentService(
             )
         }
 
-        if (createCommentDTO.authorId == 0L) {
+        if (createCommentDTO.authorId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -147,7 +147,7 @@ class CommentService(
             )
         }
 
-        if (updateCommentDTO.authorId == 0L) {
+        if (updateCommentDTO.authorId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -165,7 +165,7 @@ class CommentService(
 
         val foundUser = userApiService.getUserById(updateCommentDTO.authorId)
         val foundPost = postService.getPostById(updateCommentDTO.post.id)
-        val optionalComment = commentRepository.findById(updateCommentDTO.id)
+        val optionalComment = commentRepository.findById(updateCommentDTO.id!!)
 
         return when (optionalComment.isPresent) {
             true -> {
@@ -204,7 +204,7 @@ class CommentService(
     fun deleteComment(deleteCommentDTO: DeleteCommentDTO) {
         log.debug("call deleteComment : deleteCommentDTO = '$deleteCommentDTO'")
 
-        if (deleteCommentDTO.id == 0L) {
+        if (deleteCommentDTO.id == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -212,7 +212,7 @@ class CommentService(
             )
         }
 
-        if (deleteCommentDTO.authorId == 0L) {
+        if (deleteCommentDTO.authorId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,

@@ -3,6 +3,7 @@ package com.example.sasuke.integrated.db.repository
 import com.example.sasuke.integrated.db.entity.Post
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import java.util.*
 
 
 @Repository
@@ -15,4 +16,5 @@ interface PostRepository : JpaRepository<Post, Long?> {
     //fun findByTitleLikeAndCategoryAndDeletedAtIsNotNull(title: String, category: Category, pageRequest: PageRequest) : List<Post>
     //fun findByContentLikeAndCategoryAndDeletedAtIsNotNull(title: String, category: Category, pageRequest: PageRequest) : List<Post>
     //fun findAllByAuthorAndDeletedAtIsNotNull(author: User)
+    fun findByIdAndDeletedAtIsNull(id: Long): Optional<Post>
 }

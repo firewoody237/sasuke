@@ -84,10 +84,10 @@ class PostService(
         }*/
     }
 
-    fun getPostById(id: Long): Post {
+    fun getPostById(id: Long?): Post {
         log.debug("call getPostById : id = '$id'")
 
-        if (id == 0L) {
+        if (id == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -96,7 +96,7 @@ class PostService(
         }
 
         val postOptional = try {
-            postRepository.findById(id)
+            postRepository.findByIdAndDeletedAtIsNull(id)
         } catch (e: Exception) {
             log.error("getPostById DB search failed. $id", e)
             throw ResultCodeException(
@@ -106,7 +106,7 @@ class PostService(
             )
         }
 
-        return when (postOptional.isPresent && postOptional.get().deletedAt == null) {
+        return when (postOptional.isPresent) {
             true -> postOptional.get()
             else -> throw ResultCodeException(
                 resultCode = ResultCode.ERROR_POST_NOT_EXIST,
@@ -119,7 +119,7 @@ class PostService(
     fun createPost(createPostDTO: CreatePostDTO): Post {
         log.debug("call createPost : createPostDTO = '$createPostDTO'")
 
-        if (createPostDTO.authorId == 0L) {
+        if (createPostDTO.authorId == null) {
             throw ResultCodeException(
                 ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -174,7 +174,7 @@ class PostService(
     fun updatePost(updatePostDTO: UpdatePostDTO): Post {
         log.debug("call updatePost : updatePostDTO = '$updatePostDTO'")
 
-        if (updatePostDTO.id == 0L) {
+        if (updatePostDTO.id == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -182,7 +182,7 @@ class PostService(
             )
         }
 
-        if (updatePostDTO.authorId == 0L) {
+        if (updatePostDTO.authorId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -193,7 +193,7 @@ class PostService(
         //Post Check
         val foundPost = getPostById(updatePostDTO.id)
         //User Check
-        val foundUser = userApiService.getUserById(updatePostDTO.id)
+        val foundUser = userApiService.getUserById(updatePostDTO.authorId)
 
         //Author Check
         if (foundPost.authorId != foundUser.id) {
@@ -243,7 +243,7 @@ class PostService(
     fun deletePost(deletePostDTO: DeletePostDTO) {
         log.debug("call deletePost : deletePostDTO = '$deletePostDTO'")
 
-        if (deletePostDTO.id == 0L) {
+        if (deletePostDTO.id == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -251,7 +251,7 @@ class PostService(
             )
         }
 
-        if (deletePostDTO.authorId == 0L) {
+        if (deletePostDTO.authorId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,

@@ -22,10 +22,10 @@ class HeartService(
     }
 
     //사용자가 본인이 하트 누른 글을 찾아올 때
-    fun getHeartedPosts(userId: Long): MutableList<Post> {
+    fun getHeartedPosts(userId: Long?): MutableList<Post> {
         log.debug("call getHeartedPosts : userId = '$userId'")
 
-        if (userId == 0L) {
+        if (userId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -48,10 +48,10 @@ class HeartService(
     }
 
     //해당 글을 하트 누른 유저를 창아올 때
-    fun getHeartedUsers(postId: Long): MutableList<User> {
+    fun getHeartedUsers(postId: Long?): MutableList<User> {
         log.debug("call getHeartedUsers : postId = '$postId'")
 
-        if (postId == 0L) {
+        if (postId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -78,7 +78,7 @@ class HeartService(
     fun heart(toggleHeartDTO: ToggleHeartDTO) {
         log.debug("call heart : toggleHeartDTO = '$toggleHeartDTO'")
 
-        if (toggleHeartDTO.userId == 0L) {
+        if (toggleHeartDTO.userId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -86,7 +86,7 @@ class HeartService(
             )
         }
 
-        if (toggleHeartDTO.postId == 0L) {
+        if (toggleHeartDTO.postId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -125,7 +125,7 @@ class HeartService(
     fun unheart(toggleHeartDTO: ToggleHeartDTO) {
         log.debug("call unheart : toggleHeartDTO = '$toggleHeartDTO'")
 
-        if (toggleHeartDTO.userId == 0L) {
+        if (toggleHeartDTO.userId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,
@@ -133,7 +133,7 @@ class HeartService(
             )
         }
 
-        if (toggleHeartDTO.postId == 0L) {
+        if (toggleHeartDTO.postId == null) {
             throw ResultCodeException(
                 resultCode = ResultCode.ERROR_PARAMETER_NOT_EXISTS,
                 loglevel = Level.WARN,

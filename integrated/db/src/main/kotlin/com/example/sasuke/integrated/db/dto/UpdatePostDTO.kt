@@ -1,8 +1,8 @@
 package com.example.sasuke.integrated.db.dto
 
 data class UpdatePostDTO(
-    val id: Long = 0L,
-    val authorId: Long = 0L,
+    val id: Long?,
+    val authorId: Long?,
     var title: String?,
     var content: String?,
     var category: String?
